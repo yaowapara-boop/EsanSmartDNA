@@ -10,7 +10,7 @@
  * วิธีติดตั้ง (ทำครั้งเดียว):
  *  1. สร้าง Google Sheet ใหม่ในบัญชีของทีม > Extensions > Apps Script > วางโค้ดนี้แทนของเดิม
  *  2. Project Settings > Script Properties เพิ่ม:
- *       RECIPIENT = yaowapa.ra@ksu.ac.th      (อีเมลที่รับแบบฟอร์ม คั่นหลายอีเมลด้วย ,)
+ *       RECIPIENT = name@example.com           (อีเมลที่รับแบบฟอร์ม คั่นหลายอีเมลด้วย ,)
  *  3. เลือกฟังก์ชัน setup แล้วกด Run หนึ่งครั้ง (อนุญาตสิทธิ์ส่งอีเมลและแก้ Sheet)
  *  4. Deploy > New deployment > Web app
  *       Execute as: Me   |   Who has access: Anyone
