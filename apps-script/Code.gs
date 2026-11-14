@@ -6,6 +6,8 @@
  *  - จำกัดจำนวนครั้งที่ส่ง (กันสแปม)
  *  - อีเมลผู้รับเก็บใน Script Properties ไม่ปรากฏในหน้าเว็บ
  *  - บันทึกลง Google Sheet ของทีม และลบข้อมูลที่เก่ากว่า RETENTION_DAYS อัตโนมัติ (PDPA)
+ *  - นับจำนวนผู้เข้าชมเว็บไซต์ เก็บเป็นรายวันในชีต "สถิติผู้เข้าชม"
+ *    แล้วสรุปเป็น วันนี้ / เดือนนี้ / ปีนี้ / ทั้งหมด (ไม่เก็บข้อมูลส่วนบุคคลของผู้เข้าชม)
  *
  * วิธีติดตั้ง (ทำครั้งเดียว):
  *  1. สร้าง Google Sheet ใหม่ในบัญชีของทีม > Extensions > Apps Script > วางโค้ดนี้แทนของเดิม
@@ -36,9 +38,14 @@ const EMAIL_RE = /^[A-Za-z0-9_%+-]+(\.[A-Za-z0-9_%+-]+)*@([A-Za-z0-9]([A-Za-z0-9
 const TEL_RE = /^(0[689]\d{8}|0[2-7]\d{7})$/;
 const HEADERS = ['เวลารับ (server)', 'หน่วยงาน', 'ผู้ประสานงาน', 'เบอร์โทร', 'อีเมล', 'หลักสูตร', 'จำนวนคน', 'จังหวัด', 'รายละเอียด', 'ความยินยอม PDPA', 'ฉบับประกาศ'];
 
+const VISIT_SHEET = 'สถิติผู้เข้าชม';
+const VISIT_HEADERS = ['วันที่ (Asia/Bangkok)', 'จำนวนผู้เข้าชม'];
+const MAX_VISITS_PER_HOUR = 5000;     // กันบอทยิงนับรัว ๆ
+
 function setup() {
   const sh = sheet_();
   if (sh.getLastRow() === 0) sh.appendRow(HEADERS);
+  visitSheet_();
   ScriptApp.getProjectTriggers().forEach(t => { if (t.getHandlerFunction() === 'purgeOld') ScriptApp.deleteTrigger(t); });
   ScriptApp.newTrigger('purgeOld').timeBased().everyDays(1).atHour(3).create();
   if (!PropertiesService.getScriptProperties().getProperty('RECIPIENT')) {
@@ -46,8 +53,84 @@ function setup() {
   }
 }
 
-function doGet() {
+/**
+ * GET ?action=visit  นับผู้เข้าชม 1 ครั้ง แล้วส่งสถิติกลับ
+ * GET ?action=stats  ส่งสถิติกลับอย่างเดียว
+ */
+function doGet(e) {
+  const action = String((e && e.parameter && e.parameter.action) || '');
+  try {
+    if (action === 'visit') return json_({ ok: true, stats: recordVisit_() });
+    if (action === 'stats') return json_({ ok: true, stats: visitStats_() });
+  } catch (err) {
+    console.error(err);
+    return json_({ ok: false });
+  }
   return json_({ ok: true, service: 'esan-smartdna-quote' });
+}
+
+/* ---------- สถิติผู้เข้าชม ---------- */
+function todayKey_() { return Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd'); }
+
+function visitSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(VISIT_SHEET);
+  if (!sh) sh = ss.insertSheet(VISIT_SHEET);
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(VISIT_HEADERS);
+    sh.getRange('A:A').setNumberFormat('@'); // เก็บวันที่เป็นข้อความ ไม่ให้ Sheet แปลงเขตเวลา
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function recordVisit_() {
+  const cache = CacheService.getScriptCache();
+  const hourKey = 'v_' + Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyyMMddHH');
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(8000)) return visitStats_(); // คิวยาวเกิน: ส่งสถิติกลับโดยไม่นับ
+  try {
+    const n = Number(cache.get(hourKey) || 0);
+    if (n >= MAX_VISITS_PER_HOUR) return visitStats_();
+    cache.put(hourKey, String(n + 1), 3600);
+
+    const sh = visitSheet_();
+    const today = todayKey_();
+    const last = sh.getLastRow();
+    const lastDate = last > 1 ? dateKey_(sh.getRange(last, 1).getValue()) : '';
+    if (lastDate === today) {
+      const cell = sh.getRange(last, 2);
+      cell.setValue(Number(cell.getValue() || 0) + 1);
+    } else {
+      sh.getRange(last + 1, 1, 1, 2).setNumberFormats([['@', '0']]).setValues([[today, 1]]);
+    }
+    SpreadsheetApp.flush();
+    return visitStats_();
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function visitStats_() {
+  const sh = visitSheet_();
+  const today = todayKey_();
+  const month = today.slice(0, 7), year = today.slice(0, 4);
+  const out = { date: today, today: 0, month: 0, year: 0, total: 0 };
+  const last = sh.getLastRow();
+  if (last < 2) return out;
+  sh.getRange(2, 1, last - 1, 2).getValues().forEach(r => {
+    const d = dateKey_(r[0]), c = Number(r[1]) || 0;
+    out.total += c;
+    if (d.slice(0, 4) === year) out.year += c;
+    if (d.slice(0, 7) === month) out.month += c;
+    if (d === today) out.today += c;
+  });
+  return out;
+}
+
+function dateKey_(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, SpreadsheetApp.getActiveSpreadsheet().getSpreadsheetTimeZone(), 'yyyy-MM-dd');
+  return String(v || '').trim();
 }
 
 function doPost(e) {

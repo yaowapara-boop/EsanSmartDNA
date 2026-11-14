@@ -325,6 +325,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 footer nav{display:flex;gap:22px;flex-wrap:wrap}
 footer a{text-decoration:none}
 footer a:hover{color:var(--blue)}
+.visits{width:100%;display:flex;align-items:center;gap:10px 22px;flex-wrap:wrap;padding-bottom:18px;margin-bottom:4px;border-bottom:1px solid var(--line)}
+.visits[hidden]{display:none}
+.visits h2{font-size:14px;font-weight:600;margin:0;color:var(--ink)}
+.visits dl{display:grid;grid-template-columns:repeat(4,minmax(0,auto));gap:8px 26px;margin:0}
+.visits dl div{display:flex;flex-direction:column}
+.visits dt{font-size:12.5px}
+.visits dd{margin:0;font-size:18px;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums}
+@media (max-width:560px){.visits dl{grid-template-columns:repeat(2,minmax(0,1fr));width:100%}}
 
 @media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:40px}}
 
@@ -825,6 +833,15 @@ footer a:hover{color:var(--blue)}
 
 <footer>
   <div class="wrap">
+    <section class="visits" id="visits" aria-labelledby="vs-h" hidden>
+      <h2 id="vs-h">สถิติผู้เข้าชมเว็บไซต์</h2>
+      <dl>
+        <div><dt>วันนี้</dt><dd id="vs-today">–</dd></div>
+        <div><dt>เดือนนี้</dt><dd id="vs-month">–</dd></div>
+        <div><dt>ปีนี้</dt><dd id="vs-year">–</dd></div>
+        <div><dt>ทั้งหมด</dt><dd id="vs-total">–</dd></div>
+      </dl>
+    </section>
     <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><span class="foot-logo"><img src="assets/logo.png" alt="ท้องถิ่นพลัส by ESAN SmartDNA" width="720" height="212" loading="lazy"></span><span>© 2569 ทีม Esan SmartDNA · Smart Knowledge for a Better Tomorrow</span></div>
     <nav aria-label="ลิงก์ท้ายหน้า">
       <a href="#course">หลักสูตร</a><a href="#about">วิทยากร</a><a href="#innovation">ผลงานนวัตกรรม</a><a href="#formats">รูปแบบการอบรม</a><a href="#contact">ติดต่อเรา</a>
@@ -905,8 +922,29 @@ const MODS = [
 
 /* ---------- แบบฟอร์มขอใบเสนอราคา: ส่งไปที่ Google Apps Script ของทีม (ดู apps-script/Code.gs) ---------- */
 /* ใส่ URL ของ Web App ที่ลงท้ายด้วย /exec หลัง Deploy */
-const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbz1P84svek_SLUJqKTbLzfqesYY8A82m1_BP0mSknuxsusFom6JFgYwxQEuLf_JewWqNw/exec";
+const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbw9fi9sKibodW-rXjHoIXgaSr2QktXjYAqV8NNHg48V5o6l7KjQYQtuzAgyysQ_DpxsoA/exec";
 const NOTICE_VERSION = "2569-11-14";
+
+/* ---------- สถิติผู้เข้าชม: นับ 1 ครั้งต่อเบราว์เซอร์ต่อวัน (เก็บที่ชีต "สถิติผู้เข้าชม" ผ่าน Apps Script) ---------- */
+(function(){
+  const box=document.getElementById("visits"); if(!box || !/^https:\/\/script\.google\.com\//.test(FORM_ENDPOINT)) return;
+  const today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Bangkok"}).format(new Date());
+  const KEY="esd_visit_day";
+  let counted=false;
+  try{ counted=localStorage.getItem(KEY)===today; }catch(_){ try{ counted=sessionStorage.getItem(KEY)===today; }catch(__){} }
+  const action=counted?"stats":"visit";
+  const fmt=n=>Number(n||0).toLocaleString("th-TH");
+  fetch(FORM_ENDPOINT+"?action="+action+"&t="+Date.now(),{method:"GET",redirect:"follow",cache:"no-store"})
+    .then(r=>r.json())
+    .then(j=>{
+      if(!j || !j.ok || !j.stats) return;
+      if(action==="visit"){ try{ localStorage.setItem(KEY,today); }catch(_){ try{ sessionStorage.setItem(KEY,today); }catch(__){} } }
+      const st=j.stats;
+      [["today",st.today],["month",st.month],["year",st.year],["total",st.total]].forEach(([k,v])=>{document.getElementById("vs-"+k).textContent=fmt(v);});
+      box.hidden=false;
+    })
+    .catch(()=>{});
+})();
 (function(){
   const form = document.getElementById("quote-form"); if(!form) return;
   const TIMEOUT_MS = 20000;
