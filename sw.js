@@ -2,7 +2,7 @@
  * - เก็บเฉพาะไฟล์ของเว็บเอง (same-origin GET)
  * - ไม่เก็บ/ไม่ยุ่งกับการส่งแบบฟอร์ม (POST) และไฟล์จากโดเมนอื่น
  * แก้ไฟล์เว็บแล้วให้เปลี่ยนเลข VERSION เพื่อให้ผู้ใช้ได้เวอร์ชันใหม่ */
-const VERSION = "esan-smartdna-v7";
+const VERSION = "esan-smartdna-v10";
 const PRECACHE = [
   "./", "index.html", "manifest.webmanifest",
   "assets/logo.png", "assets/icon-192.png", "assets/icon-512.png",

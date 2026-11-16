@@ -192,6 +192,60 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 .car-btn[disabled]{opacity:0;pointer-events:none}
 .car-btn.prev{left:-22px}.car-btn.next{right:-22px}
 
+/* ---------- Showcase: featured systems ---------- */
+.sc-head{margin:44px 0 18px}
+.showcase{display:grid;gap:24px}
+.sc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);background:var(--surface);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.sc.rev .sc-visual{order:2}
+.sc-visual{position:relative;display:block;width:100%;min-height:400px;border:0;padding:0;cursor:pointer;overflow:hidden;font:inherit;color:inherit;background:var(--sc-bg)}
+.sc-visual::before{content:"";position:absolute;width:60%;aspect-ratio:1;border-radius:50%;right:-14%;bottom:-30%;background:rgba(255,255,255,.18)}
+.sc-visual::after{content:"";position:absolute;width:34%;aspect-ratio:1;border-radius:50%;left:-8%;top:-14%;background:rgba(255,255,255,.12)}
+.sc-visual > *{position:absolute;z-index:1;transition:transform .5s ease}
+.sc-visual:hover .laptop{transform:translateY(-4px)}
+.sc-visual:hover .phone{transform:translateY(-8px)}
+.laptop{left:7%;top:13%;width:78%}
+.laptop .scr{display:block;border:9px solid #1B1F2E;border-bottom-width:12px;border-radius:14px 14px 0 0;aspect-ratio:1400/890;overflow:hidden;background:#000}
+.laptop .scr img,.phone img{width:100%;height:100%;object-fit:cover;object-position:50% 0;display:block}
+.laptop .base{display:block;height:13px;margin:0 -7%;border-radius:0 0 14px 14px;background:linear-gradient(#DCE1EE,#AEB5C8);box-shadow:0 18px 30px -12px rgba(0,0,0,.4)}
+.phone{display:block;width:24%;aspect-ratio:9/18.6;border:6px solid #11131C;border-radius:24px;overflow:hidden;background:#000;box-shadow:0 22px 40px -14px rgba(0,0,0,.5)}
+.sc-suk .phone{right:6%;bottom:9%}
+.sc-hua .laptop{left:15%}
+.sc-hua .phone{left:5%;bottom:9%}
+.sc-zoom{right:16px;bottom:16px;left:auto;top:auto;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(14,22,80,.7);color:#fff;font-size:12.5px;font-weight:600;z-index:3}
+.sc-body{display:grid;gap:14px;align-content:center;justify-items:start;padding:clamp(24px,3.5vw,40px);min-width:0}
+.sc-brand{display:flex;align-items:center;gap:14px}
+.sc-logo{width:56px;height:56px;border-radius:16px;overflow:hidden;flex:none;box-shadow:var(--shadow-sm);display:grid;place-items:center;color:#fff}
+.sc-logo img{width:100%;height:100%;object-fit:cover}
+.sc h3{font-size:clamp(24px,2.6vw,30px);line-height:1.2}
+.sc-body > p{color:var(--ink-soft);font-size:15px}
+.sc-feats{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:14px;font-weight:500;width:100%}
+.sc-feats li{display:grid;grid-template-columns:20px 1fr;gap:8px;line-height:1.5}
+.sc-feats li::before{content:"✓";width:18px;height:18px;border-radius:50%;background:var(--sc-soft);color:var(--sc-c);font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:2px}
+.sc-stats{display:flex;flex-wrap:wrap;gap:10px;width:100%}
+.sc-stats div{flex:1 1 110px;padding:10px 14px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.sc-stats b{display:block;font:700 20px/1.2 var(--f-display);color:var(--sc-c);font-variant-numeric:tabular-nums}
+.sc-stats span{font-size:12.5px;color:var(--ink-soft)}
+.sc-note{font-size:12.5px;color:var(--ink-soft)}
+.sc .pill{background:var(--sc-soft);color:var(--sc-c)}
+.sc-suk{--sc-bg:linear-gradient(135deg,#2F5FE0 0%,#4C8FEA 55%,#62C3A0 100%);--sc-c:#2456D6;--sc-soft:#E6EEFF}
+.sc-hua{--sc-bg:linear-gradient(135deg,#5B3FD0 0%,#7B5CF0 50%,#6FA3EE 100%);--sc-c:#5B3FD0;--sc-soft:#EFEAFF}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sc-suk{--sc-c:#8FB0FF;--sc-soft:#1D2A63}:root:not([data-theme="light"]) .sc-hua{--sc-c:#B7A6FF;--sc-soft:#2A2160}}
+:root[data-theme="dark"] .sc-suk{--sc-c:#8FB0FF;--sc-soft:#1D2A63}
+:root[data-theme="dark"] .sc-hua{--sc-c:#B7A6FF;--sc-soft:#2A2160}
+@media (max-width:1024px){
+  .sc-head{margin:32px 0 14px}
+  .sc{grid-template-columns:1fr;border-radius:24px}
+  .sc.rev .sc-visual{order:0}
+  .sc-visual{min-height:0;aspect-ratio:16/11}
+}
+@media (max-width:639px){
+  .sc-visual{aspect-ratio:4/3.4}
+  .sc-feats{grid-template-columns:1fr}
+  .phone{border-width:4px;border-radius:16px}
+  .laptop .scr{border-width:6px;border-bottom-width:8px;border-radius:10px 10px 0 0}
+  .laptop .base{height:9px}
+}
+
 /* ---------- Works / portfolio ---------- */
 .works{background:var(--surface);border-block:1px solid var(--line)}
 .works-top{display:flex;justify-content:space-between;align-items:end;gap:24px 40px;flex-wrap:wrap;margin-bottom:26px}
@@ -825,6 +879,73 @@ footer a:hover{color:var(--blue)}
           <figure class="slsp-mascot"><img src="assets/inno-mascot.webp" alt="น้องไดโนเทค มาสคอตของ Smart Local Platform" width="240" height="249" loading="lazy"></figure>
         </article>
 
+        <div class="row-head sc-head reveal">
+          <div>
+            <h2>ผลงานเด่นเพิ่มเติม</h2>
+            <p>ระบบที่ทีมพัฒนาให้กับหน่วยงานท้องถิ่นและใช้งานได้จริง กดที่ภาพเพื่อดูหน้าจอแบบเต็ม</p>
+          </div>
+        </div>
+        <div class="showcase">
+          <article class="sc sc-suk reveal" id="sc-suksaad">
+            <button class="sc-visual" type="button" data-show="suksaad" aria-label="ดูภาพหน้าจอระบบ SukSaad ทั้งหมด">
+              <span class="laptop"><span class="scr"><img src="assets/inno-suksaad-desk-s.webp" alt="" width="900" height="572" loading="lazy"></span><span class="base"></span></span>
+              <span class="phone"><img src="assets/inno-suksaad-mobile-s.webp" alt="" width="390" height="640" loading="lazy"></span>
+              <span class="sc-zoom"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5M11 8v6M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>ดูหน้าจอ 2 ภาพ</span>
+            </button>
+            <div class="sc-body">
+              <div class="sc-brand">
+                <span class="sc-logo"><img src="assets/inno-suksaad-logo.webp" alt="" width="160" height="160" loading="lazy"></span>
+                <div><span class="pill">ระบบบริหารจัดการสิ่งปฏิกูล</span></div>
+              </div>
+              <h3>SukSaad</h3>
+              <p>ประชาชนขอรับบริการสูบสิ่งปฏิกูลออนไลน์ ระบบจัดคิวให้ผู้ประกอบการที่ได้รับอนุญาต พร้อมแดชบอร์ดสถิติการให้บริการสำหรับเทศบาลแบบอัปเดตอัตโนมัติ</p>
+              <ul class="sc-feats">
+                <li>ขอรับบริการและสมัครสมาชิกออนไลน์</li>
+                <li>เข้าระบบด้วย CitizenID</li>
+                <li>จัดคิวผู้ประกอบการที่ได้รับอนุญาต</li>
+                <li>ติดตามสถานะงานแบบเรียลไทม์</li>
+                <li>สถิติปริมาณการกำจัดรายเดือน</li>
+                <li>ประเมินความพึงพอใจหลังรับบริการ</li>
+              </ul>
+              <div class="sc-stats">
+                <div><b>327</b><span>งานบริการ</span></div>
+                <div><b>889.1</b><span>ลบ.ม. กำจัดแล้ว</span></div>
+                <div><b>4.0/5</b><span>ความพึงพอใจ (181 รีวิว)</span></div>
+              </div>
+              <p class="sc-note">ตัวเลขจากหน้าจอระบบ ณ 16 พ.ย. 2569</p>
+            </div>
+          </article>
+
+          <article class="sc sc-hua rev reveal" id="sc-huanakum">
+            <button class="sc-visual" type="button" data-show="huanakum" aria-label="ดูภาพหน้าจอระบบ GovE-Service ทั้งหมด">
+              <span class="laptop"><span class="scr"><img src="assets/inno-goveservice-desk-s.webp" alt="" width="900" height="575" loading="lazy"></span><span class="base"></span></span>
+              <span class="phone"><img src="assets/inno-huanakum-mobile-s.webp" alt="" width="412" height="640" loading="lazy"></span>
+              <span class="sc-zoom"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 16l4.5 4.5M11 8v6M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>ดูหน้าจอ 2 ภาพ</span>
+            </button>
+            <div class="sc-body">
+              <div class="sc-brand">
+                <span class="sc-logo" style="background:linear-gradient(135deg,#5B3FD0,#6FA3EE)"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16M15 10h3a1 1 0 0 1 1 1v10M3 21h18M8.5 8h3M8.5 11.5h3M8.5 15h3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+                <div><span class="pill">แพลตฟอร์มบริการประชาชน</span></div>
+              </div>
+              <h3>GovE-Service</h3>
+              <p>แพลตฟอร์มบริการประชาชน แจ้งเหตุฉุกเฉิน แจ้งปัญหาเมือง ตรวจค่าธรรมเนียมขยะ ขอรับความช่วยเหลือ และติดตามสถานะได้ทุกที่ ทุกเวลา ด้วยรหัส CitizenID ที่ปลอดภัย</p>
+              <ul class="sc-feats">
+                <li>แจ้งเหตุฉุกเฉินและปัญหาเมือง</li>
+                <li>ตรวจค่าธรรมเนียมขยะ</li>
+                <li>ขอรับความช่วยเหลือและติดตามสถานะ</li>
+                <li>บัตรสมาชิกดิจิทัล</li>
+                <li>ระบบสำหรับเจ้าหน้าที่</li>
+                <li>ข้อมูลส่วนบุคคลเข้ารหัส</li>
+              </ul>
+              <div class="sc-stats">
+                <div><b>24/7</b><span>บริการออนไลน์</span></div>
+                <div><b>4</b><span>ระบบบริการ</span></div>
+                <div><b>AES-256</b><span>เข้ารหัสข้อมูล</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+
         <div class="row-head mods-head reveal">
           <div>
             <h2>ระบบในแพลตฟอร์ม</h2>
@@ -1340,7 +1461,7 @@ const WORKS = [
   const TYPES = {all:"ทั้งหมด",train:"วิทยากร / อบรม",deliver:"ส่งมอบระบบ",show:"โชว์เคส / รางวัล",advise:"ที่ปรึกษา / คณะทำงาน"};
   const LIMIT = 7;
   const items = WORKS.slice().sort((a,b) => b.d.localeCompare(a.d));
-  const src = (w,k,small) => `assets/works/${w.id}/${k}${small?"-s":""}.webp`;
+  const src = (w,k,small) => w.imgs ? w.imgs[k-1][small?1:0] : `assets/works/${w.id}/${k}${small?"-s":""}.webp`;
   const PIN = '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.3-6-10.5a6 6 0 0 1 12 0C18 15.7 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
   const CAM = '<svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
   const ARR = '<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -1429,7 +1550,7 @@ const WORKS = [
   function open(w, from){
     cur = w; opener = from;
     document.getElementById("lb-title").textContent = w.title;
-    document.getElementById("lb-sub").textContent = `${w.date} · ${w.org}`;
+    document.getElementById("lb-sub").textContent = w.org ? `${w.date} · ${w.org}` : w.date;
     thumbs.innerHTML = Array.from({length:w.n},(_,k)=>`<button type="button" data-i="${k}" aria-label="ภาพที่ ${k+1}"><img src="${src(w,k+1,true)}" alt="" loading="lazy"></button>`).join("");
     thumbs.hidden = w.n < 2;
     if(typeof lb.showModal === "function") lb.showModal(); else lb.setAttribute("open","");
@@ -1468,6 +1589,15 @@ const WORKS = [
     if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) show(idx + (dx < 0 ? 1 : -1));
   });
   stage.addEventListener("click", e => { if(e.target === stage) close(); });
+  /* ผลงานเด่นเพิ่มเติม: เปิดภาพในหน้าต่างเดียวกับผลงาน */
+  const SHOWCASE = {
+    suksaad:{title:"SukSaad ระบบบริหารจัดการสิ่งปฏิกูล",date:"ภาพหน้าจอ ณ 16 พ.ย. 2569",org:"",n:2,
+      imgs:[["assets/inno-suksaad-desk.webp","assets/inno-suksaad-desk-s.webp"],["assets/inno-suksaad-mobile.webp","assets/inno-suksaad-mobile-s.webp"]]},
+    huanakum:{title:"GovE-Service",date:"แพลตฟอร์มบริการประชาชน",org:"",n:2,
+      imgs:[["assets/inno-goveservice-desk.webp","assets/inno-goveservice-desk-s.webp"],["assets/inno-huanakum-mobile.webp","assets/inno-huanakum-mobile-s.webp"]]}
+  };
+  document.querySelectorAll("[data-show]").forEach(b => b.addEventListener("click", () => { const w = SHOWCASE[b.dataset.show]; if(w) open(w, b); }));
+
 })();
 
 /* ---------- ปุ่มเลื่อนการ์ดวิทยากร ---------- */
