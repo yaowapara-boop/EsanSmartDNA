@@ -2,13 +2,15 @@
  * - เก็บเฉพาะไฟล์ของเว็บเอง (same-origin GET)
  * - ไม่เก็บ/ไม่ยุ่งกับการส่งแบบฟอร์ม (POST) และไฟล์จากโดเมนอื่น
  * แก้ไฟล์เว็บแล้วให้เปลี่ยนเลข VERSION เพื่อให้ผู้ใช้ได้เวอร์ชันใหม่ */
-const VERSION = "esan-smartdna-v3";
+const VERSION = "esan-smartdna-v7";
 const PRECACHE = [
   "./", "index.html", "manifest.webmanifest",
   "assets/logo.png", "assets/icon-192.png", "assets/icon-512.png",
   "assets/coach-yaowapa.webp", "assets/coach-apichat.webp", "assets/coach-anekson.webp",
   "assets/inno-mascot.webp", "assets/inno-septic.webp", "assets/inno-wastebank.webp",
-  "assets/inno-atl.webp", "assets/inno-elderly.webp"
+  "assets/inno-atl.webp", "assets/inno-elderly.webp",
+  "assets/hero-team.webp",
+  "assets/course-1.webp", "assets/course-2.webp", "assets/course-3.webp", "assets/course-4.webp", "assets/course-5.webp"
 ];
 
 self.addEventListener("install", e => {
